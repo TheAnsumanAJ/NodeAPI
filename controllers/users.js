@@ -1,34 +1,72 @@
 import { User } from "../models/user.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { sendCookie } from "../utils/features.js";
 
-export const allUsers= async (req,res)=>{
-    const users = await User.find({});
-    console.log(req.query.keyword);
+export const getAllUsers = async (req,res)=>{
 
-    res.json({
-        success:true,
-        users,
-    });
 };
 
 export const register = async (req,res)=>{
-        const { name, email, password } = req.body;
+    const { name, email, password } = req.body;
+    let user = await User.findOne({email});
     
-        await User.create({
-            name,email,password
+    if(user){
+        return res.status(404).json({
+            success: false,
+            message: "User already exists"
         });
-    
-        res.status(201).cookie("AJcookie","Ansu").json({
-            success:true,
-            message:"User created successfully"
+    }
+    const hashedPassword = await bcrypt.hash(password,10);
+    user = await User.create({
+        name, email, password: hashedPassword
+    })
+    sendCookie(user,res,"Registered successfully", 201);  
+};
+
+export const getMyProfile = async (req,res)=>{
+    const id="myid";
+    const { token } = req.cookies;
+
+    console.log(token);
+
+    if(!token){
+        return res.status(404).json({
+            success: false,
+            message: "Login first",
         })
-} 
+    }
 
-export const getUserDetails = async (req,res)=>{
-    const { id } = req.params;
-    const user = await User.findById(id);
-
-    res.json({
-        success:true,
-        user
+    const decoded = jwt.verify(token,process.env.JWT_SECRET);
+    const user = await User.findById(decoded._id);
+    res.status(200).json({
+        success: true,
+        user,
     });
-}
+   
+};
+
+export const login = async (req,res)=>{
+    const { email,password } = req.body;
+    const user = await User.findOne({email}).select("+password");
+
+    if(!user){
+        return res.status(404).json({
+            success: false,
+            message: "User not found"
+        });
+    }
+
+    const ismatch = await bcrypt.compare(password,user.password);
+
+    if(!ismatch){
+        return res.status(401).json({
+            success: false,
+            message: "Invalid password"
+        });
+    }
+
+    sendCookie(user,res,`Logged in successfully ${user.name}`,200);
+};
+
+
