@@ -24,24 +24,11 @@ export const register = async (req,res)=>{
     sendCookie(user,res,"Registered successfully", 201);  
 };
 
-export const getMyProfile = async (req,res)=>{
-    const id="myid";
-    const { token } = req.cookies;
-
-    console.log(token);
-
-    if(!token){
-        return res.status(404).json({
-            success: false,
-            message: "Login first",
-        })
-    }
-
-    const decoded = jwt.verify(token,process.env.JWT_SECRET);
-    const user = await User.findById(decoded._id);
+export const getMyProfile = (req,res)=>{
+    
     res.status(200).json({
         success: true,
-        user,
+        user: req.user,
     });
    
 };
@@ -69,4 +56,10 @@ export const login = async (req,res)=>{
     sendCookie(user,res,`Logged in successfully ${user.name}`,200);
 };
 
+export const logout = (req,res) => {
+    res.status(200).cookie("token","",{expires: new Date(Date.now())}).json({
+        success: true,
+        user:req.user,
+    });
+};
 
