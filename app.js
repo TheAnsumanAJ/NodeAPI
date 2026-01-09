@@ -12,7 +12,7 @@ config({
 });
 
 app.use(cors({
-    origin: 'process.env.FRONTEND_URL',
+    origin: 'FRONTEND_URL',
     methods:["GET","POST","PUT","DELETE"],
     credentials:true
 }));
