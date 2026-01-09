@@ -21,11 +21,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(userRouter);
 app.use("/tasks",taskRouter);
-app.use(cors({
-    origin: 'http://localhost:5173',
-    methods:["GET","POST","PUT","DELETE"],
-    credentials:true
-}));
 
 app.get('/',(req,res)=>{
     res.send("Hello AJ!");
