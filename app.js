@@ -16,7 +16,7 @@ app.use(cookieParser());
 app.use(userRouter);
 app.use("/tasks",taskRouter);
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'FRONTEND_URL',
     methods:["GET","POST","PUT","DELETE"],
     credentials:true
 }));
