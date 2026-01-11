@@ -6,15 +6,15 @@ import { isAuthenticated } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-router.get("/users/all", getAllUsers);
+router.get("/all", getAllUsers);
 
-router.post("/users/new", register);
+router.post("/new", register);
 
-router.post("/users/login", login);
+router.post("/login", login);
 
-router.get("/users/logout", logout);
+router.get("/logout", logout);
 
-router.get("/users/me", isAuthenticated, getMyProfile);
+router.get("/me", isAuthenticated, getMyProfile);
 
 
 export default router;
