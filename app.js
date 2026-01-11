@@ -7,6 +7,7 @@ import { errorMiddleware } from "./middlewares/error.js";
 import cors from "cors";
 
 export const app = express();
+const cors = require("cors");
 
 config({
   path: "./data/config.env",
