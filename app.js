@@ -6,7 +6,6 @@ import cookieParser from "cookie-parser";
 import { errorMiddleware } from "./middlewares/error.js";
 import cors from "cors";
 
-const cors = require("cors");
 export const app = express();
 
 config({
